@@ -1,11 +1,13 @@
 <?php
 
+
 namespace Spatie\Sitemap\Tags;
 
-use DateTime;
-use Carbon\Carbon;
 
-class Url extends Tag
+use Carbon\Carbon;
+use DateTime;
+
+class Image extends Tag
 {
     const CHANGE_FREQUENCY_ALWAYS = 'always';
     const CHANGE_FREQUENCY_HOURLY = 'hourly';
@@ -17,6 +19,12 @@ class Url extends Tag
 
     /** @var string */
     public $url = '';
+
+    /** @var string */
+    public $caption = '';
+
+    /** @var string */
+    public $title = '';
 
     /** @var \Carbon\Carbon */
     public $lastModificationDate;
@@ -30,37 +38,34 @@ class Url extends Tag
     /** @var array */
     public $alternates = [];
 
-    /** @var Tag */
-    public $childs = [];
-
     /**
-     * @param string $url
+     * @param string $tag
+     * @param string|null $caption
+     * @param string|null $title
      *
      * @return $this
      */
-    public static function create(string $url): self
+    public static function create(string $url, string $caption = null, string $title = null): self
     {
-        return new static($url);
+        return new static($url, $caption, $title);
     }
 
     /**
-     * @param string $url
+     * @param string $tag
+     * @param string|null $caption
+     * @param string|null $title
+     *
+     * @return $this
      */
-    public function __construct(string $url)
+    public function __construct(string $url, string $caption = null, string $title = null)
     {
         $this->url = $url;
+        $this->caption = $caption;
+        $this->title = $title;
 
         $this->lastModificationDate = Carbon::now();
 
         $this->changeFrequency = static::CHANGE_FREQUENCY_DAILY;
-    }
-
-    public function addChild(Tag $tag){
-        $this->childs[$tag->getType()][] = $tag;
-    }
-
-    public function getChildImages(){
-        return $this->childs['image'];
     }
 
     /**
